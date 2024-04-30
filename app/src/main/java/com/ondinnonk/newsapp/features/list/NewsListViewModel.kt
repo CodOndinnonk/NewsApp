@@ -1,5 +1,6 @@
 package com.ondinnonk.newsapp.features.list
 
+import android.util.Log
 import com.ondinnonk.newsapp.core.BaseViewModel
 import com.ondinnonk.newsapp.features.NewsUiModel
 import com.ondinnonk.newsapp.repository.News
@@ -14,7 +15,7 @@ class NewsListViewModel(private val repository: Repository) : BaseViewModel() {
     private var news: List<News> = mutableListOf()
         private set(value) {
             field = value
-            onUpdateListEmit.tryEmit(value.map { NewsUiModel.create(it) })
+            onUpdateListEmit.tryEmit(value.map { NewsUiModel.create(it).getOrThrow() })
 
         }
 
@@ -24,6 +25,8 @@ class NewsListViewModel(private val repository: Repository) : BaseViewModel() {
                 .onSuccess { news = it }
                 .onFailure {
                     //TODO TEST Add
+
+                    Log.d("TEST_TAG", "NewsListViewModel: ")
                 }
         }
     }
@@ -32,4 +35,5 @@ class NewsListViewModel(private val repository: Repository) : BaseViewModel() {
     fun onOpenDetails(model: NewsUiModel) {//TODO TEST
 
     }
+
 }

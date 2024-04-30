@@ -17,7 +17,6 @@ class NewsListAdapter(
 
     private var listData: ArrayList<NewsUiModel> = arrayListOf()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemNewsListBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -37,14 +36,19 @@ class NewsListAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun isContentSame(old: NewsUiModel, new: NewsUiModel): Boolean { //TODO TEST
-        return old.title == new.title
+    private fun isContentSame(old: NewsUiModel, new: NewsUiModel): Boolean {
+        return old.title == new.title &&
+                old.author == new.author &&
+                old.date == new.date &&
+                old.image == new.image
     }
 
     inner class ViewHolder(val binding: ItemNewsListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: NewsUiModel): Unit = with(itemView) {
             binding.root.setOnClickListener { onSelect(model) }
             binding.title.text = model.title
+            binding.author.text = model.author
+            binding.date.text = model.date
         }
     }
 

@@ -1,5 +1,7 @@
 package com.ondinnonk.newsapp.repository
 
+import android.util.Log
+import com.ondinnonk.newsapp.NewsApplication.Companion.LOG_TAG
 import com.ondinnonk.newsapp.repository.remote.ServerApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,7 +22,15 @@ class RepositoryImpl(private val serverApi: ServerApi) : Repository {
                 result.body()?.let { body ->
                     body.getContent()
                         .onSuccess {
-                            val mapped = it.map { News.create(it) }
+                            val mapped = mutableListOf<News>()
+                            it.forEach {
+                                News.create(it)
+                                    .onSuccess { mapped.add(it) }
+                                    .onFailure {
+                                        //can be processed differently base on requirements
+                                        Log.e(LOG_TAG, "Skip news record.", it)
+                                    }
+                            }
                             return Result.success(mapped)
                         }
                         .onFailure {
