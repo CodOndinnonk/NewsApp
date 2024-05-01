@@ -1,5 +1,6 @@
 package com.ondinnonk.newsapp.repository
 
+import com.ondinnonk.newsapp.repository.local.NewsEntity
 import com.ondinnonk.newsapp.repository.local.db.RoomDb
 import com.ondinnonk.newsapp.repository.remote.newsapi.NewsRemoteModel
 import java.util.Date
@@ -15,6 +16,17 @@ data class News(
 ) {
 
     companion object {
+
+        fun create(model: NewsEntity): News {
+            return News(
+                uid = model.uid,
+                title = model.title,
+                author = model.author,
+                image = model.image,
+                date = model.date,
+                content = model.content
+            )
+        }
 
         fun create(model: NewsRemoteModel): Result<News> = runCatching {
             val baseErrorPrefix = "Failed to create ${News::class.simpleName}."

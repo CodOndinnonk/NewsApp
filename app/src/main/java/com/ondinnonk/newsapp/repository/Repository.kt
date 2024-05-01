@@ -1,6 +1,11 @@
 package com.ondinnonk.newsapp.repository
 
-interface Repository {
+import com.ondinnonk.newsapp.utils.Coroutineble
+import kotlinx.coroutines.flow.Flow
 
-    suspend fun getNews(): Result<List<News>>
+interface Repository : Coroutineble {
+
+    suspend fun getNews(): Flow<List<News>>
+    suspend fun refreshNews(): Result<Unit>
+
 }

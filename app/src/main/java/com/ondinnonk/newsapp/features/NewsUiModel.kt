@@ -17,17 +17,15 @@ data class NewsUiModel(
 
         private const val UI_DATE_FORMAT = "dd MMMM yyyy HH:mm"
 
-        fun create(model: News): Result<NewsUiModel> = runCatching {
-            val dateStr = formatDateForUI(model.date).getOrThrow()
-            return Result.success(
-                NewsUiModel(
-                    uid = model.uid,
-                    title = model.title,
-                    author = model.author,
-                    image = model.image,
-                    date = dateStr,
-                    content = model.content
-                )
+        fun create(model: News): NewsUiModel {
+            val dateStr = formatDateForUI(model.date).getOrDefault("")
+            return NewsUiModel(
+                uid = model.uid,
+                title = model.title,
+                author = model.author,
+                image = model.image,
+                date = dateStr,
+                content = model.content
             )
         }
 

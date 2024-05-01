@@ -32,12 +32,20 @@ class NewsListFragment : BaseFragment<FragmentNewsListBinding, NewsListViewModel
         binding.list.adapter = adapter
     }
 
-
     override fun initObservers(): Unit = with(viewModel) {
-        onUpdateList.observe(viewLifecycleOwner) { adapter.setListData(it) }
+        onUpdateList.observe(viewLifecycleOwner) {
+            adapter.setListData(it)
+            binding.listRefresh.isRefreshing = false
+        }
+        onRefreshToEarly.observe(viewLifecycleOwner) {
+            binding.listRefresh.isRefreshing = false
+        }
     }
 
     override fun initListeners() {
+        binding.listRefresh.setOnRefreshListener {
+            viewModel.onRefreshList()
+        }
     }
 
 }

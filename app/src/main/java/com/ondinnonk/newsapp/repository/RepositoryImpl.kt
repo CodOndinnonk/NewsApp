@@ -1,55 +1,63 @@
 package com.ondinnonk.newsapp.repository
 
+import android.text.format.DateUtils
 import android.util.Log
 import com.ondinnonk.newsapp.NewsApplication.Companion.LOG_TAG
-import com.ondinnonk.newsapp.repository.remote.ServerApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.ondinnonk.newsapp.repository.local.RepositoryLocal
+import com.ondinnonk.newsapp.repository.remote.RepositoryRemote
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import java.util.Date
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class RepositoryImpl(private val serverApi: ServerApi) : Repository {
+class RepositoryImpl(
+    private val remote: RepositoryRemote,
+    private val local: RepositoryLocal,
+    private val dataStore: DataStore
+) : Repository {
 
-    override suspend fun getNews(): Result<List<News>> {
-        return getNewsFromServer()
+    companion object {
+        private const val FETCH_TIME_INTERVAL = 10 * DateUtils.MINUTE_IN_MILLIS
     }
 
-    private suspend fun getNewsFromServer(): Result<List<News>> {
-        return kotlin.runCatching {
-            val result = withContext(Dispatchers.IO) {
-                serverApi.getLatestNews()
-            }
+    override suspend fun getNews(): Flow<List<News>> {
+        return local.getAllNews()
+    }
 
-            if (result.isSuccessful) {
-                result.body()?.let { body ->
-                    body.getContent()
-                        .onSuccess {
-                            val mapped = mutableListOf<News>()
-                            it.forEach {
-                                News.create(it)
-                                    .onSuccess { mapped.add(it) }
-                                    .onFailure {
-                                        //can be processed differently base on requirements
-                                        Log.e(LOG_TAG, "Skip news record.", it)
-                                    }
-                            }
-                            return Result.success(mapped)
+    override suspend fun refreshNews(): Result<Unit> = suspendCoroutine { cont ->
+        launch {
+            if (isAllowedToFetch()) {
+                remote.fetchNewsFromServer().onSuccess { fetchedNews ->
+                    //save news to DB
+                    fetchedNews.forEach {
+                        if (local.saveNews(it) == 0L) {
+                            Log.e(LOG_TAG, "Failed to save record to DB. Model = $it")
                         }
-                        .onFailure {
-                            val details = "Failed to get news from server."
-                            return Result.failure(Exception(details, it))
-                        }
-                    throw Exception("Never reach point")
-                } ?: kotlin.run {
-                    val details =
-                        "Failed to get news from server. Request success but body is invalid. ${result.message()}; ${result.errorBody()}"
-                    return Result.failure(Exception(details))
+                    }
+                    dataStore.saveFetchTime(Date().time)
+                    cont.resume(Result.success(Unit))
                 }
+                    .onFailure {
+                        cont.resume(Result.failure(Exception("Failed to fetch new fresh news.", it)))
+                    }
             } else {
-                val details =
-                    "Failed to get news from server. Request failed. Code = ${result.code()}; Msg = ${result.message()}; ${result.errorBody()}"
-                return Result.failure(Exception(details))
+                Log.i(LOG_TAG, "Fetch not allowed yet")
+                cont.resume(Result.failure(ToEarlyRefreshException()))
             }
         }
     }
 
+    /**
+     * Check if we can fetch data agan, based on time of last update
+     */
+    private suspend fun isAllowedToFetch(): Boolean {
+        dataStore.lastFetchTime.first().let { lastUpdate ->
+            return Date().time - lastUpdate >= FETCH_TIME_INTERVAL
+        }
+    }
+
+
+    class ToEarlyRefreshException() : Exception()
 
 }

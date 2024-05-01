@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ondinnonk.newsapp.R
 import com.ondinnonk.newsapp.databinding.ItemNewsListBinding
 import com.ondinnonk.newsapp.features.NewsUiModel
 import com.ondinnonk.newsapp.utils.ListDiffUtil
@@ -49,6 +51,14 @@ class NewsListAdapter(
             binding.title.text = model.title
             binding.author.text = model.author
             binding.date.text = model.date
+
+            model.image?.let { imgUrl ->
+                Glide.with(binding.image)
+                    .load(imgUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.picture_placeholder)
+                    .into(binding.image)
+            }
         }
     }
 

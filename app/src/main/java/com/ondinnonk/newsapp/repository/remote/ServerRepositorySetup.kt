@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class ServerRepository(private val context: Context) {
+class ServerRepositorySetup(private val context: Context) {
 
     companion object {
         const val BASE_URL = "https://newsapi.org/v2/"

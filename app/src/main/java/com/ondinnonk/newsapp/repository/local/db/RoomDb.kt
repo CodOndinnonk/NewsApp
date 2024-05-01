@@ -2,6 +2,7 @@ package com.ondinnonk.newsapp.repository.local.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.ondinnonk.newsapp.repository.local.NewsEntity
 import com.ondinnonk.newsapp.repository.local.db.RoomDb.Companion.DB_VERSION
 
@@ -10,7 +11,9 @@ import com.ondinnonk.newsapp.repository.local.db.RoomDb.Companion.DB_VERSION
         NewsEntity::class,
     ], version = DB_VERSION, exportSchema = false
 )
-
+@TypeConverters(
+    DateTypeConverters::class,
+)
 abstract class RoomDb : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
