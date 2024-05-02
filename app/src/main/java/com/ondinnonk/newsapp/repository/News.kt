@@ -1,10 +1,13 @@
 package com.ondinnonk.newsapp.repository
 
+import android.os.Parcelable
 import com.ondinnonk.newsapp.repository.local.NewsEntity
 import com.ondinnonk.newsapp.repository.local.db.RoomDb
 import com.ondinnonk.newsapp.repository.remote.newsapi.NewsRemoteModel
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
+@Parcelize
 data class News(
     val dbId: Long = RoomDb.DEFAULT_ID_VALUE,
     val uid: String,
@@ -13,7 +16,7 @@ data class News(
     val image: String?,
     val date: Date,
     val content: String,
-) {
+) : Parcelable {
 
     companion object {
 

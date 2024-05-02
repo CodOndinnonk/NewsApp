@@ -2,6 +2,7 @@ package com.ondinnonk.newsapp.di
 
 import androidx.room.Room
 import com.ondinnonk.newsapp.MainActivityViewModel
+import com.ondinnonk.newsapp.SharedViewModel
 import com.ondinnonk.newsapp.features.details.NewsDetailsViewModel
 import com.ondinnonk.newsapp.features.list.NewsListViewModel
 import com.ondinnonk.newsapp.repository.DataStore
@@ -19,6 +20,7 @@ val viewModelModule = module {
     viewModel { MainActivityViewModel() }
     viewModel { NewsListViewModel(get()) }
     viewModel { NewsDetailsViewModel() }
+    viewModel { SharedViewModel() }
 }
 
 val repositoryModule = module {

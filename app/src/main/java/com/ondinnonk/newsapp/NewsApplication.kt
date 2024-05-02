@@ -1,6 +1,8 @@
 package com.ondinnonk.newsapp
 
 import android.app.Application
+import android.content.Context
+import android.content.res.Configuration
 import com.ondinnonk.newsapp.di.networkModule
 import com.ondinnonk.newsapp.di.repositoryModule
 import com.ondinnonk.newsapp.di.utilsModule
@@ -31,4 +33,9 @@ class NewsApplication : Application() {
         }
     }
 
+}
+
+fun Context.isLandscape(): Boolean {
+    val orientation = resources.configuration.orientation
+    return orientation == Configuration.ORIENTATION_LANDSCAPE
 }
