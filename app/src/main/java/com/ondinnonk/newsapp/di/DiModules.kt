@@ -1,7 +1,6 @@
 package com.ondinnonk.newsapp.di
 
 import androidx.room.Room
-import com.ondinnonk.newsapp.MainActivityViewModel
 import com.ondinnonk.newsapp.SharedViewModel
 import com.ondinnonk.newsapp.features.details.NewsDetailsViewModel
 import com.ondinnonk.newsapp.features.list.NewsListViewModel
@@ -17,7 +16,6 @@ import org.koin.dsl.module
 
 
 val viewModelModule = module {
-    viewModel { MainActivityViewModel() }
     viewModel { NewsListViewModel(get()) }
     viewModel { NewsDetailsViewModel() }
     viewModel { SharedViewModel() }
@@ -39,29 +37,4 @@ val repositoryModule = module {
     }
     factory { get<RoomDb>().newsDao() }
     single { DataStore(get()) }
-}
-
-val utilsModule = module {
-//    factory { SoundRecognitionUseCase(get(), get()) }
-}
-
-val qualityModule = module {
-//    single { DetailedLogger() }
-//    single { CrashlyticsLogger() }
-}
-
-val networkModule = module {
-//    factory {
-//        val service: WebApiService = get()
-//        return@factory service.retrofit.create(AuthApi::class.java)
-//    }
-}
-
-
-//val useCaseModule = module {
-//    factory { CheckUpdateUseCase(get(), get()) }
-//    factory { TakeMedicationUseCase(get(), get()) }
-//}
-
-val validatorsModule = module {
 }

@@ -1,13 +1,11 @@
 package com.ondinnonk.newsapp.features.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import com.bumptech.glide.Glide
-import com.ondinnonk.newsapp.NewsApplication.Companion.LOG_TAG
 import com.ondinnonk.newsapp.R
 import com.ondinnonk.newsapp.SharedViewModel
 import com.ondinnonk.newsapp.core.BaseFragment
@@ -45,7 +43,7 @@ class NewsDetailsFragment : BaseFragment<FragmentNewsDetailsBinding, NewsDetails
         sharedViewModel.openDetails.observe(viewLifecycleOwner) {
             it?.let {
                 setupUi(it)
-            } ?: run { Log.w(LOG_TAG, "Open details fragment without provided news object") }
+            }
         }
     }
 

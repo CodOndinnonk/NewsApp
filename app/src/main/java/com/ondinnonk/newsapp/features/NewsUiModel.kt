@@ -3,6 +3,7 @@ package com.ondinnonk.newsapp.features
 import com.ondinnonk.newsapp.repository.News
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 data class NewsUiModel(
     val uid: String,
@@ -30,7 +31,7 @@ data class NewsUiModel(
         }
 
         fun formatDateForUI(date: Date): Result<String> {
-            val output = SimpleDateFormat(UI_DATE_FORMAT)
+            val output = SimpleDateFormat(UI_DATE_FORMAT, Locale.getDefault())
             val formattedTime: String = output.format(date)
             if (formattedTime.isBlank()) {
                 return Result.failure(Exception("Created date string is empty, please check. Date = ${date}; FormattedTime = $formattedTime"))

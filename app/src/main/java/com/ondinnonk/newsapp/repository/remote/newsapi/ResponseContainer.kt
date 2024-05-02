@@ -11,7 +11,7 @@ data class ResponseContainer(
     val articles: List<NewsRemoteModel>,
 ) {
 
-    fun getContent(): Result<List<NewsRemoteModel>> { //TODO TEST add if fail
+    fun getContent(): Result<List<NewsRemoteModel>> {
         if (articles.isEmpty()) {
             return Result.failure(Exception("Failed to get news. Status = $status"))
         }

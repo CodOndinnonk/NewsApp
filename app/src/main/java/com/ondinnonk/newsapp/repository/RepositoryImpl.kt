@@ -57,7 +57,6 @@ class RepositoryImpl(
         }
     }
 
-
     class ToEarlyRefreshException() : Exception()
 
 }

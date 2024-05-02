@@ -3,9 +3,7 @@ package com.ondinnonk.newsapp
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
-import com.ondinnonk.newsapp.di.networkModule
 import com.ondinnonk.newsapp.di.repositoryModule
-import com.ondinnonk.newsapp.di.utilsModule
 import com.ondinnonk.newsapp.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -26,8 +24,6 @@ class NewsApplication : Application() {
                 listOf(
                     viewModelModule,
                     repositoryModule,
-                    utilsModule,
-                    networkModule,
                 )
             )
         }
